@@ -7,6 +7,7 @@ from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from product.filters import ProductFilter
 from rest_framework.filters import SearchFilter, OrderingFilter
+from product.paginations import DefaultPagination
 # Create your views here.
 
 
@@ -14,6 +15,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend,SearchFilter,OrderingFilter]
+    pagination_class = DefaultPagination
     filterset_class = ProductFilter
     search_fields=['name','description']
     ordering_fields=['price','updated_at']
