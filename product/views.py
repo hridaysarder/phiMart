@@ -8,9 +8,9 @@ from django_filters.rest_framework import DjangoFilterBackend
 from product.filters import ProductFilter
 from rest_framework.filters import SearchFilter, OrderingFilter
 from product.paginations import DefaultPagination
-# from rest_framework.permissions import IsAdminUser, AllowAny
 from api.permissions import IsAdminOrReadOnly
 from product.permissions import IsReviewAuthorOrReadOnly
+
 # Create your views here.
 
 
