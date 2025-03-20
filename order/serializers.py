@@ -101,6 +101,12 @@ class CreateOrderSerializer(serializers.Serializer):
         return OrderSerializer(instance).data
 
 
+class UpdateOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = ['status']
+
+
 class OrderItemSerializer(serializers.ModelSerializer):
     product = SimpleProductSerializer()
 
