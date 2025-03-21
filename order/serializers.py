@@ -4,6 +4,10 @@ from product.models import Product
 from order.services import OrderService
 
 
+class EmptySerializer(serializers.Serializer):
+    pass
+
+
 class SimpleProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
