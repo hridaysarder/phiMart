@@ -1,7 +1,6 @@
-from rest_framework.response import Response
-from product.models import Product, Category, Review
+from product.models import Product, Category, Review, ProductImage
 from rest_framework import status
-from product.serializers import ProductSerializer, CategorySerializer, ReviewSerializer
+from product.serializers import ProductSerializer, CategorySerializer, ReviewSerializer, ProductImageSerializer
 from django.db.models import Count
 from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
@@ -22,13 +21,7 @@ class ProductViewSet(ModelViewSet):
     filterset_class = ProductFilter
     search_fields = ['name', 'description']
     ordering_fields = ['price', 'updated_at']
-    # permission_classes = [IsAdminUser]
     permission_classes = [IsAdminOrReadOnly]
-
-    # def get_permissions(self):
-    #     if self.request.method == 'GET':
-    #         return [AllowAny()]
-    #     return [IsAdminUser()]
 
     def get_queryset(self):
         queryset = Product.objects.all()
@@ -38,12 +31,16 @@ class ProductViewSet(ModelViewSet):
             queryset = Product.objects.filter(category_id=category_id)
         return queryset
 
-    def destroy(self, request, *args, **kwargs):
-        product = self.get_object()
-        if product.stock > 10:
-            return Response({"message": "Product more than 10 could not be deleted"})
-        self.perform_destroy(product)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs.get('product_pk'))
+
+    def perform_create(self, serializer):
+        serializer.save(product_id=self.kwargs.get('product_pk'))
 
 
 class CategoryViewSet(ModelViewSet):
@@ -62,7 +59,7 @@ class ReviewViewSet(ModelViewSet):
         serializer.save(user=self.request.user)
 
     def get_queryset(self):
-        return Review.objects.filter(product_id=self.kwargs['product_pk'])
+        return Review.objects.filter(product_id=self.kwargs.get('product_pk'))
 
     def get_serializer_context(self):
-        return {'product_id': self.kwargs['product_pk']}
+        return {'product_id': self.kwargs.get('product_pk')}
