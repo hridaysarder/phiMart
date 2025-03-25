@@ -37,13 +37,12 @@ INSTALLED_APPS = [
     'product',
     'order',
     'rest_framework',
-    "debug_toolbar",
     'djoser',
 
 ]
 
 MIDDLEWARE = [
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    # "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
