@@ -14,15 +14,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-zasg3u4s6lvap^vwm4yih0^wy-oy#)n%_hj6#(=6$p*u84qdtd'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [".vercel.app", "127.0.0.1"]
 AUTH_USER_MODEL = 'users.User'
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "whitenoise.runserver_nostatic",
     'django_filters',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -44,6 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -70,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'phi_mart.wsgi.application'
+WSGI_APPLICATION = 'phi_mart.wsgi.app'
 
 INTERNAL_IPS = [
     # ...
@@ -122,17 +124,17 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 
-
 # Configuration for cloudinary storage
-cloudinary.config( 
-    cloud_name = config('cloud_name'), 
-    api_key = config('cloudinary_api_key'), 
-    api_secret = config('api_secret'), # Click 'View API Keys' above to copy your API secret
+cloudinary.config(
+    cloud_name=config('cloud_name'),
+    api_key=config('cloudinary_api_key'),
+    # Click 'View API Keys' above to copy your API secret
+    api_secret=config('api_secret'),
     secure=True
 )
 
 # Media storage settings
-DEFAULT_FILE_STORAGE='cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 LANGUAGE_CODE = 'en-us'
 
@@ -147,8 +149,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-MEDIA_URL = '/media/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+# STATIC_FILES_DIR = BASE_DIR / 'static'
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
